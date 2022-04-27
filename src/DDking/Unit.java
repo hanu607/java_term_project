@@ -1,9 +1,10 @@
 package DDking;
 import java.util.Random;
+import java.io.*;
 import DDking.Weapon;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import DDking.MyUtility;
 //Unit class
 public class Unit {
     private String name;
@@ -14,19 +15,13 @@ public class Unit {
     
     private Random oRandom = new Random();
     
-    static int pow(int a,int b) {
-        if (b==0) return 1;
-        int ret = pow(a,b/2);
-        if(b%2==0) return ret*ret;
-        else return a*ret*ret;
-    }
     
     public Unit() {name =""; maxHp=1; curHp=1; avgAtk = 0; level = 1;}
     
     public Unit(String name, int level) {
         this.name = name;
         this.level = level;
-        this.maxHp = (int)(oRandom.nextDouble(1,5)*pow(2,(level/5)));
+        this.maxHp = (int)(oRandom.nextDouble(1,5)*MyUtility.pow(2,(level/5)));
         curHp = maxHp;
         avgAtk = maxHp/5 + (int)(oRandom.nextDouble()*maxHp/5);
     }
@@ -70,21 +65,23 @@ class Hero extends Unit{
     public Hero(String name,int level) {
         super(name,level); gold = 0; exp = 0; weapons.add(new Weapon());
     }
+
     @Override
     public String showInfo() {
         String info = new String();
-        info += getName() + "(Lv " + getLevel() + ")" + '\n' +
-                "HP : " + getCurHp()+" / " + getMaxHp() +  " | Gold : " + gold + 
-                " | Exp : " + exp + '\n' + "Weapon : " + weapon.showInfo();
-                return info;
+        info += getName() + "(Lv " + getLevel() + ")" + '\n' + "HP : " + getCurHp() + " / " + getMaxHp() + " | Gold : "
+                + gold + " | Exp : " + exp + '\n' + "Weapon : " + weapon.showInfo();
+        return info;
     }
     
     public String WeaponList() {
         String list = new String();
         int i = 1;
-        for(Weapon w : weapons) {list += i++ +". "+ w.showInfo();}
-        return list;
+        for (Weapon w : weapons) {
+            list += i++ + ". " + w.showInfo();
         }
+        return list;
+    }
     
     public void changeWeapon() {
         System.out.println("Hero's Weapons");
@@ -92,18 +89,18 @@ class Hero extends Unit{
         System.out.println(WeaponList());
         System.out.println("--------------------------------------");
         System.out.println("Select Weapons : ");
-        while(true) {
-        int n = scanner.nextInt();
-        if(0 < n && n <= weapons.size()) {
-            this.weapon = weapons.get(n);
-            this.setAvgAtk(weapons.get(n).getDamage());
-            System.out.print(showInfo());
-            break;
-            }
-        else System.out.println("Put Correct Number");
+        while (true) {
+            int n = scanner.nextInt();
+            if (0 < n && n <= weapons.size()) {
+                this.weapon = weapons.get(n);
+                this.setAvgAtk(weapons.get(n).getDamage());
+                System.out.print(showInfo());
+                break;
+            } else
+                System.out.println("Put Correct Number");
         }
     }
-    
+
     public void kill(Enemy e) {
         exp += e.getLevel();
         gold += 100;
@@ -111,23 +108,24 @@ class Hero extends Unit{
     
     public void levelUp() {
         exp = 0;
-        setLevel(getLevel()+1);
+        setLevel(getLevel() + 1);
     }
     
-    public void drawWeapon(String type){
-        gold-=300;
-        Weapon w = new Weapon(type,getLevel());
+    public void drawWeapon(String type) {
+        gold -= 300;
+        Weapon w = new Weapon(type, getLevel());
         System.out.println("New Weapon!" + '\n' + w.showInfo());
         weapons.add(w);
     }
+    
     public void goHospital() {
-        if(gold > 100) {
-        gold -= 100;
-        setCurHp(getMaxHp());
-        System.out.println("치료가 완료되었습니다.");
-        this.showInfo();
-        }
-        else System.out.println("돈이 부족합니다.");
+        if (gold >= 100) {
+            gold -= 100;
+            setCurHp(getMaxHp());
+            System.out.println("치료가 완료되었습니다!");
+            this.showInfo();
+        } else
+            System.out.println("돈이 부족합니다.");
     }
     
     //getter
@@ -142,6 +140,15 @@ class Hero extends Unit{
 class Enemy extends Unit{
     Enemy(){
         super();
+//        try {
+//            this.setName(MyUtility.randomEnemyName());
+//        }
+//        catch (FileNotFoundException ex) {
+//            
+//        }
+//        catch(IOException ex) {
+//            
+//        }
     }
     
 }
