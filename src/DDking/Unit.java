@@ -120,7 +120,15 @@ class Hero extends Unit{
         System.out.println("New Weapon!" + '\n' + w.showInfo());
         weapons.add(w);
     }
-    
+    public void goHospital() {
+        if(gold > 100) {
+        gold -= 100;
+        setCurHp(getMaxHp());
+        System.out.println("치료가 완료되었습니다.");
+        this.showInfo();
+        }
+        else System.out.println("돈이 부족합니다.");
+    }
     
     //getter
     public int getGold() {return gold;}
@@ -132,4 +140,8 @@ class Hero extends Unit{
 
 //Enemy class
 class Enemy extends Unit{
+    Enemy(){
+        super();
+    }
+    
 }

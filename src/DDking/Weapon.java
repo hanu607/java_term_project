@@ -1,6 +1,7 @@
 package DDking;
 import java.util.Random;
 import java.io.File;
+import DDking.methods;
 
 public class Weapon {
     private String name;

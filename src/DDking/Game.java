@@ -34,8 +34,11 @@ public class Game {
     public static void goHunt() {
         
     }
+    
     public static void action() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("무슨 행동을 하시겠습니까?");
-        
+        System.out.println("1.사냥 2.치료 3.제작 4.상태");
+        int n = scanner.nextInt();
     }
 }
