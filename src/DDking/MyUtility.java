@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class MyUtility {
-    
+
     public static int pow(int a, int b) {
         if (b == 0)
             return 1;
@@ -22,13 +22,14 @@ public class MyUtility {
         ArrayList<String> sList = new ArrayList<String>();
         Random random = new Random();
         Scanner input = new Scanner(file);
-        int n = 0;
-        while (input.hasNext()) {
+        while (input.hasNext())
             sList.add(input.nextLine());
-            n++;
+        if (sList.isEmpty()) {
+            System.out.println("text file is empty!");
+            System.exit(0);
         }
-        int r = random.nextInt(0, n-1);
-        String name = r == 0 ? "" : sList.get(r);
+        int r = random.nextInt(0, sList.size() - 1);
+        String name = sList.get(r);
         input.close();
         return name;
     }

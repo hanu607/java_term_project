@@ -1,4 +1,5 @@
 package DDking;
+
 import java.util.Random;
 import java.io.File;
 import DDking.MyUtility;
@@ -9,56 +10,52 @@ public class Weapon {
     private int ATK;
     private int level;
     private Random oRandom = new Random();
-    
-    public Weapon() {name = "Spoon"; type = ""; ATK = 1; level = 0;}
+
+    public Weapon() {
+        name = "Spoon";
+        type = "";
+        ATK = 1;
+        level = 0;
+    }
+
     public Weapon(int level) {
-        
         try {
             String newFirstName = MyUtility.randomName("Weapon(first name).txt");
-            if (newFirstName.equals("")) {
-                System.out.println("Weapon(first name).txt is empty.");
-                System.exit(0);
-            }
             name = newFirstName;
         } catch (Exception ex) {
             System.out.println("no match file : Weapon(first name).txt");
             System.exit(0);
         }
-        
+
         try {
             String newSecondName = MyUtility.randomName("Weapon(second name).txt");
-            if (newSecondName.equals("")) {
-                System.out.println("Weapon(second name).txt is empty.");
-                System.exit(0);
-            }
             name += " " + newSecondName;
         } catch (Exception ex) {
             System.out.println("no match file : Weapon(second name).txt");
             System.exit(0);
         }
-        
+
         try {
             String newType = MyUtility.randomName("Weapon(type name).txt");
-            if (newType.equals("")) {
-                System.out.println("Weapon(type name).txt is empty.");
-                System.exit(0);
-            }
             name += " " + newType;
         } catch (Exception ex) {
             System.out.println("no match file : Weapon(type name).txt");
             System.exit(0);
         }
         this.level = level;
-        this.ATK = (int)(oRandom.nextDouble(1,2.5)*MyUtility.pow(2,(level/5)));
-        } 
+        this.ATK = (int) (oRandom.nextDouble(1, 2.5) * MyUtility.pow(2, (level / 5)));
+    }
+
     public String IconNameLv() {
         String s = "|" + name + "(Lv " + level + ")|";
         return s;
     }
+
     public String IconATK() {
         String s = "|ATK : " + ATK + "|";
         return s;
     }
+
     public String showInfo() {
         String info = new String();
         info += IconNameLv() + IconATK();
