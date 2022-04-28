@@ -5,7 +5,12 @@ import java.io.File;
 import java.util.Scanner;
 public class Game {
     private Hero hero;
+    private boolean isRun;
     Scanner scanner = new Scanner(System.in);
+    public Game(){
+        hero = new Hero();
+        isRun = true; 
+    }
     public void start() {
         
         System.out.println("딱뎀의 왕이 되려는 자... 당신의 이름은..?");
@@ -17,9 +22,9 @@ public class Game {
         System.out.println("Hello, " + name + '\n' + "딱뎀을 잘 맞출 자신이 있는가... (Y or N)");
         String ans = scanner.next();                           
         if(ans.equals("Y")) {
-            hero = new Hero(name,1);
-            System.out.print("당신의 정보 : ");
-            System.out.println(hero.showInfo() + "모험을 시작합니다..." + '\n');
+            hero.setName(name);
+            
+            System.out.println( '\n' + "모험을 시작합니다..." + '\n');
         }
         else {
             System.out.println("준비가 되면 다시 오게...");
@@ -28,8 +33,29 @@ public class Game {
     }
         
     public void goHunt() {
+        Enemy enemy = new Enemy(hero.getLevel());
+        System.out.println(enemy.showInfo() + "을(를) 마주쳤습니다!"  + '\n'
+                + '\n' + hero.WeaponList());
         
+        while (hero.isAlive()) {
+            System.out.println("사용할 무기를 고르십시오.");
+            hero.changeWeapon();
+            hero.attack(enemy);
+            if(enemy.getCurHp() <= 0) break;
+            System.out.println(enemy.showInfo());
+            enemy.attack(hero);
+            System.out.println(hero.IconNameLv() + hero.IconHp());
+        }
+        if (hero.getCurHp() <= 0) {
+            over();
+            return;
+        }
+        else {
+            hero.kill(enemy);
+        }
+        hero.levelUp();
     }
+    
     
     public void action() {
         System.out.println("무슨 행동을 하시겠습니까?");
@@ -47,13 +73,17 @@ public class Game {
             hero.goHospital();
             break;
         case 3: //제작
-            System.out.println("제작 중 입니다...");
+            System.out.println("제작소로 이동 중 입니다...");
+            hero.drawWeapon();
             break;
         case 4: //상태
-            System.out.println(hero.showInfo());
+            System.out.println(hero.showInfo() +'\n');
             break;
         }
     }
+    public void over() {isRun = false;}
     
+    //getter
+    public boolean getIsRun() {return isRun;}
     public Hero getHero() {return hero;}
 }

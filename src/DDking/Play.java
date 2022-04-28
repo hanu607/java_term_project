@@ -6,6 +6,8 @@ public class Play {
         System.out.println("DDakk DDam King");
         Game game = new Game();
         game.start();
+        while(game.getIsRun()) {
         game.action();  //action 구현 완료하기
+        }
     }
 }

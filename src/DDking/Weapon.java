@@ -6,32 +6,72 @@ import DDking.MyUtility;
 public class Weapon {
     private String name;
     private String type;
-    private int damage;
+    private int ATK;
     private int level;
-    private int price;
     private Random oRandom = new Random();
     
-    public Weapon() {name = "Spoon"; type = ""; damage = 1; level = 0; price = 0;}
-    public Weapon(String type,int level) {
-        this.type = type;
-        this.name = name + type; 
+    public Weapon() {name = "Spoon"; type = ""; ATK = 1; level = 0;}
+    public Weapon(int level) {
+        
+        try {
+            String newFirstName = MyUtility.randomName("Weapon(first name).txt");
+            if (newFirstName.equals("")) {
+                System.out.println("Weapon(first name).txt is empty.");
+                System.exit(0);
+            }
+            name = newFirstName;
+        } catch (Exception ex) {
+            System.out.println("no match file : Weapon(first name).txt");
+            System.exit(0);
+        }
+        
+        try {
+            String newSecondName = MyUtility.randomName("Weapon(second name).txt");
+            if (newSecondName.equals("")) {
+                System.out.println("Weapon(second name).txt is empty.");
+                System.exit(0);
+            }
+            name += " " + newSecondName;
+        } catch (Exception ex) {
+            System.out.println("no match file : Weapon(second name).txt");
+            System.exit(0);
+        }
+        
+        try {
+            String newType = MyUtility.randomName("Weapon(type name).txt");
+            if (newType.equals("")) {
+                System.out.println("Weapon(type name).txt is empty.");
+                System.exit(0);
+            }
+            name += " " + newType;
+        } catch (Exception ex) {
+            System.out.println("no match file : Weapon(type name).txt");
+            System.exit(0);
+        }
         this.level = level;
-        this.damage = (int)(oRandom.nextDouble(1,2.5)*MyUtility.pow(2,(level/5)));
-        this.price = level*10;
+        this.ATK = (int)(oRandom.nextDouble(1,2.5)*MyUtility.pow(2,(level/5)));
         } 
+    public String IconNameLv() {
+        String s = "|" + name + "(Lv " + level + ")|";
+        return s;
+    }
+    public String IconATK() {
+        String s = "|ATK : " + ATK + "|";
+        return s;
+    }
     public String showInfo() {
         String info = new String();
-        info += name + "(Lv " + level + ") | ATK : " + damage + '\n';
+        info += IconNameLv() + IconATK();
         return info;
     }
     //getter
     public String getName() {return name;}
     public String getType() {return type;}
-    public int getDamage() {return damage;}
+    public int getATK() {return ATK;}
     public int getLevel() {return level;}
     //setter
     public void setName(String newName) {name = newName;}
     public void setType(String newType) {type = newType;}
-    public void setDamage(int newDamage) {damage = newDamage;}
+    public void setATK(int newATK) {ATK = newATK;}
     public void setLevel(int newLevel) {level = newLevel;}
 }

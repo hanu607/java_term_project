@@ -1,0 +1,12 @@
+Sword
+Knife
+Spear
+Axe
+War Hammer
+Mace
+Dagger
+Sickle
+Bow
+Whip
+Staff
+Blade
