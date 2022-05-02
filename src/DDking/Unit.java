@@ -19,18 +19,21 @@ public class Unit {
 
     public Unit() {
         name = "";
-        maxHp = 10;
-        curHp = 10;
-        avgAtk = 0;
+        maxHp = 1;
+        curHp = 1;
+        avgAtk = 1;
         level = 1;
     }
 
     public Unit(String name, int level) {
         this.name = name;
         this.level = level;
-        this.maxHp = (int) (oRandom.nextDouble(1, 5) * MyUtility.pow(2, (level / 5)));
+        this.maxHp = 1 + (int)(oRandom.nextDouble(level, 5) * MyUtility.pow(2, level)/5);
         curHp = maxHp;
-        avgAtk = maxHp / 5 + (int) (oRandom.nextDouble() * maxHp / 5);
+        int temp = 1 + (int)(oRandom.nextDouble(level, 5) * MyUtility.pow(2, level)/5);
+        avgAtk = temp / 5 + (int) (oRandom.nextGaussian() *
+                temp / 5);
+        if(avgAtk < 1) avgAtk = 1;
     }
 
     public void attack(Unit opponent) {
@@ -38,7 +41,7 @@ public class Unit {
         if (avgAtk == 1)
             damage = 1;
         else
-            damage = avgAtk * 2 * (int) oRandom.nextGaussian() + 1;
+            damage = (int)(avgAtk + oRandom.nextGaussian()) + 1;
         System.out.println(this.getName() + "의 공격 : " + damage + "피해");
         opponent.curHp -= damage;
     }
@@ -53,10 +56,14 @@ public class Unit {
         String s = "|HP : " + this.getCurHp() + "/" + this.getMaxHp() + "|";
         return s;
     }
+    public String IconAvgAtk() {
+        String s = "|AvgAtk : " + this.getAvgAtk() + "|";
+        return s;
+    }
 
     public String showInfo() {
         String info = new String();
-        info += IconNameLv() + IconHp();
+        info += IconNameLv() + IconHp()+ IconAvgAtk();
         return info;
     }
 
@@ -89,6 +96,8 @@ class Hero extends Unit {
 
     public Hero() {
         super();
+        setMaxHp(10);
+        setCurHp(getMaxHp());
         gold = 0;
         curExp = 0;
         maxExp = 10;
@@ -129,7 +138,9 @@ class Hero extends Unit {
 
     public String WeaponList() {
         String list = new String();
-        list += "Weapon List\n" + "----------------------------\n";
+        list += "Weapon List\n" + "----------------------------\n"
+                + "0. Escape\n";
+        
         int i = 1;
         for (Weapon w : weapons) {
             list += i++ + ". " + w.showInfo() + '\n';
@@ -138,28 +149,32 @@ class Hero extends Unit {
         return list;
     }
 
-    public void changeWeapon() {
+    public int changeWeapon() {
         int n = scanner.nextInt();
-        while (0 >= n || n > weapons.size()) {
+        while (0 > n || n > weapons.size()) {
             System.out.println("Put Correct Number");
             n = scanner.nextInt();
         }
-        this.weapon = weapons.get(n - 1);
-        this.setAvgAtk(weapons.get(n - 1).getATK());
+        if (n != 0) {
+            this.weapon = weapons.get(n - 1);
+            this.setAvgAtk(weapons.get(n - 1).getATK());
+        }
+        return n;
     }
 
     public void kill(Enemy e) {
-        curExp += e.getLevel() * 10;
+        int exp = (int)(5*e.getLevel() + oRandom.nextGaussian());
+        curExp += exp;
         if (curExp > maxExp)
             curExp = maxExp;
         if (e.getCurHp() == 0) {
-            System.out.println("딱뎀!!!\n" + e.IconNameLv() + "을(를) 처리했습니다.");
-            System.out.println("더 나은 보상(500Gold)과 경험치(" + e.getLevel() * 10 + ")을 획득합니다.");
-            gold += 500;
-            System.out.println(this.IconGold() + this.IconExp());
-        } else {
-            System.out.println(e.IconNameLv() + "을(를) 처리했습니다. 보상(100Gold)을 획득합니다.");
+            System.out.println("딱뎀!!!\n" + e.IconNameLv() + "을(를) 처리했습니다.\n"
+                    + "더 나은 보상(100Gold)과 경험치(" + exp + ")을 획득합니다.\n");
             gold += 100;
+        } else {
+            System.out.println(e.IconNameLv() + "을(를) 처리했습니다.\n"
+                    + " 보상(50Gold)과 경험치(" + exp + ")을 획득합니다.\n");
+            gold += 50;
         }
     }
 
@@ -168,9 +183,9 @@ class Hero extends Unit {
             curExp = 0;
             setLevel(getLevel() + 1);
             maxExp = 10 * getLevel();
-            setMaxHp((int) (oRandom.nextDouble(1, 5) * MyUtility.pow(2, (getLevel() / 5))));
+            setMaxHp((int) (10 + oRandom.nextDouble(1, 5) * MyUtility.pow(2, (getLevel() / 5))));
             setCurHp(getMaxHp());
-            System.out.println("레벨업! " + showInfo());
+            System.out.println("레벨업! " + showInfo() + '\n');
         }
     }
 
@@ -178,8 +193,15 @@ class Hero extends Unit {
         if (gold >= 300) {
             gold -= 300;
             Weapon w = new Weapon(getLevel());
-            System.out.println("New Weapon!\n" + w.showInfo());
-            weapons.add(w);
+            System.out.println("New Weapon!\n" + w.showInfo() + "\n이 무기를 가지시겠습니까? (Y/N)");
+            String ans = "";
+            while (!ans.equals("Y") && !ans.equals("N")) {
+                ans = scanner.next();
+                if (ans.equals("Y")) {
+                    weapons.add(w);
+                    System.out.println(w.IconNameLv() + "을(를) 추가하였습니다!");
+                }
+            }
         } else
             System.out.println("돈이 부족합니다. " + IconGold());
     }

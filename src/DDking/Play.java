@@ -9,7 +9,8 @@ public class Play {
         Game game = new Game();
         game.start();
         while (game.getIsRun()) {
-            game.action(); // action 구현 완료하기
+            game.action();
         }
+        System.out.println("게임을 종료 합니다.");
     }
 }

@@ -28,20 +28,20 @@ public class Game {
         if (ans.equals("Y")) {
             hero.setName(name);
 
-            System.out.println("\n모험을 시작합니다...\n");
+            System.out.println("모험을 시작합니다... 목표 10Lv");
         } else {
             System.out.println("준비가 되면 다시 오게...");
-            System.exit(0);
+            isRun = false;
         }
     }
 
     public void goHunt() {
         Enemy enemy = new Enemy(hero.getLevel());
-        System.out.println(enemy.showInfo() + "을(를) 마주쳤습니다!\n\n" + hero.WeaponList());
-
+        System.out.println(hero.WeaponList() + "\n\n" + enemy.showInfo() + "을(를) 마주쳤습니다!");
         while (hero.isAlive()) {
             System.out.println("사용할 무기를 고르십시오.");
-            hero.changeWeapon();
+            if (0 == hero.changeWeapon())
+                return;
             hero.attack(enemy);
             if (enemy.getCurHp() <= 0)
                 break;
@@ -57,29 +57,36 @@ public class Game {
             hero.kill(enemy);
         }
         hero.levelUp();
+        if (hero.getLevel() == 10) {
+            isRun = false;
+            System.out.println("레벨 10!!!" + hero.IconNameLv() + " 당신은 DDKING 입니다.\n" + hero.showInfo());
+        }
     }
 
     public void action() {
-        System.out.println("무슨 행동을 하시겠습니까?");
-        System.out.println("1.사냥 2.치료 3.제작 4.상태");
+        System.out.println("\n무슨 행동을 하시겠습니까?");
+        System.out.println("1.사냥 2.치료(100) 3.제작(300) 4.상태");
 
-        int n = scanner.nextInt();
+        String n = scanner.next();
 
         switch (n) {
-        case 1: // 사냥
-            System.out.println("사냥터로 이동 중 입니다...");
+        case "1": // 사냥
+            System.out.println("사냥터로 이동 중 입니다...\n");
             goHunt();
             break;
-        case 2: // 치료
-            System.out.println("병원으로 이동 중 입니다...");
+        case "2": // 치료
+            System.out.println("병원으로 이동 중 입니다..\n");
             hero.goHospital();
             break;
-        case 3: // 제작
-            System.out.println("제작소로 이동 중 입니다...");
+        case "3": // 제작
+            System.out.println("제작소로 이동 중 입니다...\n");
             hero.drawWeapon();
             break;
-        case 4: // 상태
+        case "4": // 상태
             System.out.println(hero.showInfo() + '\n');
+            break;
+        default: 
+            System.out.println("올바른 행동을 입력 하십시오...\n");
             break;
         }
     }
@@ -87,7 +94,7 @@ public class Game {
     public void over() {
         isRun = false;
     }
-
+    
     //getter
     public boolean getIsRun() {return isRun;}
     public Hero getHero() {return hero;}

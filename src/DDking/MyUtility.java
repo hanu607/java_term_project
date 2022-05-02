@@ -25,7 +25,7 @@ public class MyUtility {
         while (input.hasNext())
             sList.add(input.nextLine());
         if (sList.isEmpty()) {
-            System.out.println("text file is empty!");
+            System.out.println(path + "text file is empty!");
             System.exit(0);
         }
         int r = random.nextInt(0, sList.size() - 1);

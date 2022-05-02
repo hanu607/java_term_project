@@ -43,7 +43,7 @@ public class Weapon {
             System.exit(0);
         }
         this.level = level;
-        this.ATK = (int) (oRandom.nextDouble(1, 2.5) * MyUtility.pow(2, (level / 5)));
+        this.ATK = (int) (oRandom.nextDouble(level/2, 2.5) * MyUtility.pow(2, level)/5);
     }
 
     public String IconNameLv() {
