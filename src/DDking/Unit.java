@@ -28,11 +28,9 @@ public class Unit {
     public Unit(String name, int level) {
         this.name = name;
         this.level = level;
-        this.maxHp = 1 + (int)(oRandom.nextDouble(level%5, 5) * MyUtility.pow(2, level)/5);
+        this.maxHp = oRandom.nextInt(MyUtility.pow(level,4),MyUtility.pow(level,5) + 1);
         curHp = maxHp;
-        int temp = 1 + (int)(oRandom.nextDouble(level%5, 5) * MyUtility.pow(2, level)/5);
-        avgAtk = temp / 5 + (int) (oRandom.nextGaussian() + temp / 5);
-        if(avgAtk < 1) avgAtk = 1;
+        avgAtk = (oRandom.nextInt(MyUtility.pow(level,4),MyUtility.pow(level,5) + 1))/5;
     }
 
     public void attack(Unit opponent) {
@@ -99,7 +97,7 @@ class Hero extends Unit {
         setCurHp(getMaxHp());
         gold = 0;
         curExp = 0;
-        maxExp = 10;
+        maxExp = 100;
         weapons.add(new Weapon());
     }
 
@@ -138,7 +136,7 @@ class Hero extends Unit {
     public String WeaponList() {
         String list = new String();
         list += "Weapon List\n" + "----------------------------\n"
-                + "0. Escape\n";
+                + "0. 도망가기\n";
         
         int i = 1;
         for (Weapon w : weapons) {
@@ -149,75 +147,86 @@ class Hero extends Unit {
     }
 
     public int changeWeapon() {
-        int n = scanner.nextInt();
-        while (0 > n || n > weapons.size()) {
-            System.out.println("Put Correct Number");
-            n = scanner.nextInt();
+        int n = 0;
+        while (true) {
+            try {
+                n = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("왜 굳이 그런짓을... 다시 입력하게나.");
+                scanner = new Scanner(System.in);
+                continue;
+            }
+            if (0 > n || n > weapons.size()) {
+                System.out.println("자네는 무기 개수도 모르는가...? 다시 입력하게나.");
+                continue;
+            }
+            break;
         }
-        if (n != 0) {
+        if (n != 0)
             this.setAvgAtk(weapons.get(n - 1).getATK());
-        }
         return n;
     }
 
     public void kill(Enemy e) {
-        int exp = (int)(5*e.getLevel() + oRandom.nextGaussian());
-        curExp += exp;
-        if (curExp > maxExp)
-            curExp = maxExp;
+        int exp = 100 * getLevel();
         if (e.getCurHp() == 0) {
-            System.out.println("딱뎀!!!\n" + e.IconNameLv() + "을(를) 처리했습니다.\n"
-                    + "더 나은 보상(100Gold)과 경험치(" + exp + ")을 획득합니다.\n");
+            System.out.println(
+                    "딱뎀!!!\n" + e.IconNameLv() + "을(를) 처리했습니다.\n" + "100Gold와 경험치(" + exp + ")을 획득합니다.\n");
+            curExp += exp;
             gold += 100;
         } else {
-            System.out.println(e.IconNameLv() + "을(를) 처리했습니다.\n"
-                    + " 보상(50Gold)과 경험치(" + exp + ")을 획득합니다.\n");
-            gold += 50;
+            System.out.println(e.IconNameLv() + "을(를) 무자비하게 처리했습니다...딱뎀킹이 되고 싶지 않은가..?\n");
         }
+        if (curExp >= maxExp)
+            levelUp();
     }
 
     public void levelUp() {
-        if (curExp >= 10 * this.getLevel()) {
-            curExp = 0;
-            setLevel(getLevel() + 1);
-            maxExp = 10 * getLevel();
-            setMaxHp((int) (10 + oRandom.nextDouble(1, 5) * MyUtility.pow(2, (getLevel() / 5))));
-            setCurHp(getMaxHp());
-            System.out.println("레벨업! " + showInfo() + '\n');
-        }
+        curExp = 0;
+        setLevel(getLevel() + 1);
+        maxExp = 500 * getLevel();
+        setMaxHp(5 * (oRandom.nextInt(MyUtility.pow(getLevel(), 4), MyUtility.pow(getLevel(), 5) + 1)));
+        setCurHp(getMaxHp());
+        System.out.println("레벨업! " + showInfo() + '\n');
     }
 
     public void drawWeapon() {
-        if (gold >= 200) {
-            gold -= 200;
+        if (gold >= 100) {
+            gold -= 100;
             Weapon w = new Weapon(getLevel());
             System.out.println("New Weapon!\n" + w.showInfo() + "\n이 무기를 가지시겠습니까? (Y/N)");
             String ans = "";
             while (!ans.equals("Y") && !ans.equals("N")) {
                 ans = scanner.next();
                 if (ans.equals("Y")) {
-                    weapons.add(w);
+                    int i;
+                    for(i = weapons.size() - 1;i >= 0; i--) {
+                        if(weapons.get(i).getATK() <= w.getATK())
+                            break;
+                    }
+                    weapons.add(i+1,w);
+                
                     if(w.getATK()>=weapon.getATK())
                         weapon = w;
-                    System.out.println(w.IconNameLv() + "을(를) 추가하였습니다!");
-                    
-                }
+                    System.out.println(w.IconNameLv() + "을(를) 추가하였습니다!"); 
+                } else
+                    System.out.println("상점주인 : 마음씨 좋은 총각일세... ");
             }
         } else
-            System.out.println("돈이 부족합니다. " + IconGold());
+            System.out.println("상점주인 : 딱뎀을 더 하고 오시게... " + IconGold());
     }
 
-    public void goHospital() {
-        if (gold >= 50) {
+    public void heal() {
+        if (gold >= 200) {
 
             if (getCurHp() < getMaxHp()) {
                 setCurHp(getMaxHp());
-                System.out.println("치료가 완료되었습니다!\n" + IconHp() + IconGold());
-                gold -= 50;
+                System.out.println("병원장 : 치료가 완료되었습니다. 이제 아프지 마세요!\n" + IconHp() + IconGold());
+                gold -= 200;
             } else
-                System.out.println("체력이 충분합니다\n" + IconHp() + IconGold());
+                System.out.println("병원장 : 제가 봐드릴게 없네요.\n" + IconHp() + IconGold());
         } else
-            System.out.println("돈이 부족합니다. " + IconGold());
+            System.out.println("병원장 : 환자분은 딱뎀을 더 하고 오셔야겠습니다." + IconGold());
     }
 
     //getter
