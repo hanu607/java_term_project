@@ -28,11 +28,10 @@ public class Unit {
     public Unit(String name, int level) {
         this.name = name;
         this.level = level;
-        this.maxHp = 1 + (int)(oRandom.nextDouble(level, 5) * MyUtility.pow(2, level)/5);
+        this.maxHp = 1 + (int)(oRandom.nextDouble(level%5, 5) * MyUtility.pow(2, level)/5);
         curHp = maxHp;
-        int temp = 1 + (int)(oRandom.nextDouble(level, 5) * MyUtility.pow(2, level)/5);
-        avgAtk = temp / 5 + (int) (oRandom.nextGaussian() *
-                temp / 5);
+        int temp = 1 + (int)(oRandom.nextDouble(level%5, 5) * MyUtility.pow(2, level)/5);
+        avgAtk = temp / 5 + (int) (oRandom.nextGaussian() + temp / 5);
         if(avgAtk < 1) avgAtk = 1;
     }
 
@@ -156,7 +155,6 @@ class Hero extends Unit {
             n = scanner.nextInt();
         }
         if (n != 0) {
-            this.weapon = weapons.get(n - 1);
             this.setAvgAtk(weapons.get(n - 1).getATK());
         }
         return n;
@@ -190,8 +188,8 @@ class Hero extends Unit {
     }
 
     public void drawWeapon() {
-        if (gold >= 300) {
-            gold -= 300;
+        if (gold >= 200) {
+            gold -= 200;
             Weapon w = new Weapon(getLevel());
             System.out.println("New Weapon!\n" + w.showInfo() + "\n이 무기를 가지시겠습니까? (Y/N)");
             String ans = "";
@@ -199,7 +197,10 @@ class Hero extends Unit {
                 ans = scanner.next();
                 if (ans.equals("Y")) {
                     weapons.add(w);
+                    if(w.getATK()>=weapon.getATK())
+                        weapon = w;
                     System.out.println(w.IconNameLv() + "을(를) 추가하였습니다!");
+                    
                 }
             }
         } else
@@ -207,12 +208,12 @@ class Hero extends Unit {
     }
 
     public void goHospital() {
-        if (gold >= 100) {
+        if (gold >= 50) {
 
             if (getCurHp() < getMaxHp()) {
                 setCurHp(getMaxHp());
                 System.out.println("치료가 완료되었습니다!\n" + IconHp() + IconGold());
-                gold -= 100;
+                gold -= 50;
             } else
                 System.out.println("체력이 충분합니다\n" + IconHp() + IconGold());
         } else

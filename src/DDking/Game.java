@@ -40,8 +40,10 @@ public class Game {
         System.out.println(hero.WeaponList() + "\n\n" + enemy.showInfo() + "을(를) 마주쳤습니다!");
         while (hero.isAlive()) {
             System.out.println("사용할 무기를 고르십시오.");
-            if (0 == hero.changeWeapon())
+            if (0 == hero.changeWeapon()) {
+                System.out.println("도망쳤습니다...");
                 return;
+                }
             hero.attack(enemy);
             if (enemy.getCurHp() <= 0)
                 break;
@@ -65,7 +67,7 @@ public class Game {
 
     public void action() {
         System.out.println("\n무슨 행동을 하시겠습니까?");
-        System.out.println("1.사냥 2.치료(100) 3.제작(300) 4.상태");
+        System.out.println("1.사냥 2.치료(50) 3.무기제작(100) 4.상태");
 
         String n = scanner.next();
 
