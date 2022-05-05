@@ -37,7 +37,7 @@ public class Game {
 
     public void goHunt() {
         Enemy enemy = new Enemy(hero.getLevel());
-        System.out.println(hero.WeaponList() + "\n\n" + enemy.showInfo() + "을(를) 마주쳤습니다!");
+        System.out.println(hero.weaponList() + "\n\n" + enemy.showInfo() + "을(를) 마주쳤습니다!");
         while (hero.isAlive()) {
             System.out.println("사용할 무기를 고르십시오.");
             if (0 == hero.changeWeapon()) {
@@ -60,13 +60,13 @@ public class Game {
         }
         if (hero.getLevel() == 10) {
             isRun = false;
-            System.out.println("레벨 10!!!" + hero.IconNameLv() + " 자네가 새 [딱뎀킹 : DDKING]이구먼... 이제 나도 편히...쉴 수 있겠어...\n" + hero.showInfo()+"\n\n" + hero.WeaponList());
+            System.out.println("레벨 10!!!" + hero.IconNameLv() + " 자네가 새 [딱뎀킹 : DDKING]이구먼... 이제 나도 편히...쉴 수 있겠어...\n" + hero.showInfo()+"\n\n" + hero.weaponList());
         }
     }
 
     public void action() {
         System.out.println("\n다음 행동들을 할 수 있다네...");
-        System.out.println("1.사냥 2.치료(200G) 3.무기제작(100G) 4.상태");
+        System.out.println("1.사냥 2.치료(200G) 3.무기제작(100G) 4.무기삭제(200G) 5.상태");
 
         String n = scanner.next();
 
@@ -83,11 +83,14 @@ public class Game {
             System.out.println("제작소로 이동 중입니다...\n");
             hero.drawWeapon();
             break;
-        case "4": // 상태
-            System.out.println(hero.showInfo() + '\n');
+        case "4":
+            hero.eraseWeapon();
+            break;
+        case "5": // 상태
+            System.out.println(hero.showInfo());
             break;
         default: 
-            System.out.println("똑바로 좀 입력하게나... 왜 그러는 건가...대체\n");
+            System.out.println("똑바로 좀 입력하게나... 왜 그러는 건가...대체");
             break;
         }
     }

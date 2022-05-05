@@ -13,5 +13,5 @@ public class Play {
             game.action();
         }
         System.out.println("게임을 종료 합니다.");
-    }
+    }   //to-do : UML 다이어그램
 }
