@@ -197,7 +197,7 @@ class Hero extends Unit {
         }
 
     public void kill(Enemy e) {
-        int exp = 200 * getLevel();
+        int exp = 400 * getLevel();
         if (e.getCurHp() == 0) {
             System.out.println(
                     "딱뎀!!!\n" + e.IconNameLv() + "을(를) 처리했습니다.\n" + "200Gold와 경험치(" + exp + ")을 획득합니다.\n");
@@ -216,19 +216,17 @@ class Hero extends Unit {
         curExp = 0;
         setLevel(getLevel() + 1);
         maxExp = 400 * getLevel();
-        int newMaxHp = 5 * (oRandom.nextInt(MyUtility.pow(getLevel(), 4), MyUtility.pow(getLevel(), 5) + 1));
-        setCurHp(newMaxHp*getCurHp()/getMaxHp());
-        setMaxHp(newMaxHp);
+        setMaxHp(5 * (oRandom.nextInt(MyUtility.pow(getLevel(), 4), MyUtility.pow(getLevel(), 5) + 1)));
+        setCurHp(getMaxHp());
         System.out.println("레벨업! " + showInfo());
     }
   
 
     public void drawWeapon() {
-        if (weapons.size() < 5) {
+        if (weapons.size() < 10) {
             if (gold >= 100) {
                 gold -= 100;
-                int randomLevel = oRandom.nextInt(2, 10);
-                Weapon w = new Weapon(randomLevel);
+                Weapon w = new Weapon(getLevel());
                 System.out.println("New Weapon!\n" + w.showInfo() + "\n이 무기를 가지시겠습니까? (Y/N)");
                 String ans = "";
                 while (!ans.equals("Y") && !ans.equals("N")) {
@@ -250,16 +248,17 @@ class Hero extends Unit {
             } else
                 System.out.println("상점주인 : 딱뎀을 더 하고 오시게... " + IconGold());
         } else
-            System.out.println("무기는 최대 5개까지입니다...");
+            System.out.println("무기는 최대 9개까지입니다...");
     }
 
     public void heal() {
-        if (gold >= 200) {
+        if (gold >= 100) {
 
             if (getCurHp() < getMaxHp()) {
                 setCurHp(getMaxHp());
+                gold -= 100;
                 System.out.println("병원장 : 치료가 완료되었습니다. 이제 아프지 마세요!\n" + IconHp() + IconGold());
-                gold -= 200;
+                
             } else
                 System.out.println("병원장 : 제가 봐드릴게 없네요.\n" + IconHp() + IconGold());
         } else

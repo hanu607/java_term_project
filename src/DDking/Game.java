@@ -66,7 +66,7 @@ public class Game {
 
     public void action() {
         System.out.println("\n다음 행동들을 할 수 있다네...");
-        System.out.println("1.사냥 2.치료(200G) 3.무기제작(100G) 4.무기삭제(200G) 5.상태");
+        System.out.println("1.사냥 2.치료(100G) 3.무기제작(100G) 4.무기삭제(200G) 5.상태");
 
         String n = scanner.next();
 
