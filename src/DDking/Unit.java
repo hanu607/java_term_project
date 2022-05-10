@@ -223,7 +223,7 @@ class Hero extends Unit {
   
 
     public void drawWeapon() {
-        if (weapons.size() < 10) {
+        if (weapons.size() < 9) {
             if (gold >= 100) {
                 gold -= 100;
                 Weapon w = new Weapon(getLevel());
